@@ -22,9 +22,9 @@ concurrency:
 
 jobs:
   android:
-    name: Android Production Build
+    name: Android Debug APK
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
@@ -48,25 +48,30 @@ jobs:
           java-version: 17
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools platforms;android-36 build-tools;36.0.0 ndk;27.1.12297006
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check Expo configuration
-        run: pnpm exec expo config --type public
-
       - name: Run Expo Doctor
         run: pnpm dlx expo-doctor
 
-      - name: Export Android production bundle
-        run: pnpm exec expo export --platform android
+      - name: Generate native Android project
+        run: pnpm exec expo prebuild --platform android --no-install
+        env:
+          CI: "1"
 
-      - name: Upload Android bundle
-        if: always() && hashFiles('dist/**') != ''
+      - name: Build Android debug APK
+        working-directory: android
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Upload Android APK
+        if: always() && hashFiles('android/app/build/outputs/apk/debug/app-debug.apk') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: android-production-bundle
-          path: dist/
+          name: android-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: ignore
           retention-days: 7
