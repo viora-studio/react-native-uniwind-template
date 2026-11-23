@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { useUniwind } from 'uniwind';
 
 const buttonVariants = cva(
   cn(
@@ -90,6 +91,7 @@ const emphasisGradients = {
   default: { start: '#3C86FF', end: '#056DFF', ring: '#045EDE' },
   brand: { start: '#DADD6C', end: '#D5D647', ring: '#B9BA3D' },
   destructive: { start: '#FF5B57', end: '#FB2C36', ring: '#DA252E' },
+  destructiveDark: { start: '#F0463E', end: '#E7000B', ring: '#C90008' },
 } as const;
 
 type ButtonProps = React.ComponentProps<typeof Pressable> &
@@ -104,9 +106,13 @@ function Button({
   ...props
 }: ButtonProps) {
   const gradientId = React.useId().replace(/[^a-zA-Z0-9_-]/g, '');
-  const gradient = variant in emphasisGradients
-    ? emphasisGradients[variant as keyof typeof emphasisGradients]
-    : undefined;
+  const { theme } = useUniwind();
+  const gradient =
+    variant === 'destructive' && theme === 'dark'
+      ? emphasisGradients.destructiveDark
+      : variant in emphasisGradients
+        ? emphasisGradients[variant as keyof typeof emphasisGradients]
+        : undefined;
 
   return (
     <TextClassContext.Provider value={buttonTextVariants({ variant, size })}>
