@@ -48,7 +48,7 @@ function TabsTrigger({
         className={cn(
           'flex flex-row items-center justify-center gap-1.5 rounded-xl border border-transparent px-2 py-1',
           Platform.select({
-            web: 'h-[calc(100%-1px)] whitespace-nowrap outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none',
+            web: 'h-full whitespace-nowrap outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none',
           }),
           props.disabled && 'opacity-50',
           isActive && 'bg-background dark:border-input dark:bg-input/30',
