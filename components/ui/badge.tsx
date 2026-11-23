@@ -6,27 +6,31 @@ import { Platform, View } from 'react-native';
 
 const badgeVariants = cva(
   cn(
-    'border-border group shrink-0 flex-row items-center justify-center gap-1 overflow-hidden rounded-full border px-2 py-0.5',
+    'h-5 w-fit shrink-0 flex-row items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5',
     Platform.select({
-      web: 'focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-fit whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] [&>svg]:pointer-events-none [&>svg]:size-3',
+      web: 'whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [&>svg]:size-3',
     })
   ),
   {
     variants: {
       variant: {
-        default: cn(
-          'bg-primary border-transparent',
-          Platform.select({ web: '[a&]:hover:bg-primary/90' })
-        ),
-        secondary: cn(
-          'bg-secondary border-transparent',
-          Platform.select({ web: '[a&]:hover:bg-secondary/90' })
-        ),
+        default: cn('bg-primary', Platform.select({ web: '[a&]:hover:bg-primary/80' })),
+        secondary: cn('bg-secondary', Platform.select({ web: '[a&]:hover:bg-secondary/80' })),
         destructive: cn(
-          'bg-destructive border-transparent',
-          Platform.select({ web: '[a&]:hover:bg-destructive/90' })
+          'bg-destructive/10',
+          Platform.select({ web: 'dark:bg-destructive/20 [a&]:hover:bg-destructive/20' })
         ),
-        outline: Platform.select({ web: '[a&]:hover:bg-accent [a&]:hover:text-accent-foreground' }),
+        brand: cn('bg-brand', Platform.select({ web: '[a&]:hover:bg-brand/80' })),
+        success: cn('bg-success-tint', Platform.select({ web: '[a&]:hover:bg-success-tint/80' })),
+        info: cn('bg-info-tint', Platform.select({ web: '[a&]:hover:bg-info-tint/80' })),
+        warning: cn('bg-warning-tint', Platform.select({ web: '[a&]:hover:bg-warning-tint/80' })),
+        beta: cn('border border-dashed border-primary/50 bg-transparent'),
+        outline: cn(
+          'border-border bg-input/30',
+          Platform.select({ web: '[a&]:hover:bg-muted' })
+        ),
+        ghost: cn('bg-transparent', Platform.select({ web: 'hover:bg-muted hover:text-muted-foreground' })),
+        link: cn('bg-transparent', Platform.select({ web: 'text-primary underline-offset-4 hover:underline' })),
       },
     },
     defaultVariants: {
@@ -40,8 +44,15 @@ const badgeTextVariants = cva('text-xs font-medium', {
     variant: {
       default: 'text-primary-foreground',
       secondary: 'text-secondary-foreground',
-      destructive: 'text-white',
+      destructive: 'text-destructive',
+      brand: 'text-brand-foreground',
+      success: 'text-success',
+      info: 'text-info',
+      warning: 'text-warning',
+      beta: 'text-primary',
       outline: 'text-foreground',
+      ghost: 'text-foreground',
+      link: 'text-primary',
     },
   },
   defaultVariants: {
@@ -54,8 +65,9 @@ type BadgeProps = React.ComponentProps<typeof View> &
     asChild?: boolean;
   } & VariantProps<typeof badgeVariants>;
 
-function Badge({ className, variant, asChild, ...props }: BadgeProps) {
+function Badge({ className, variant = 'default', asChild, ...props }: BadgeProps) {
   const Component = asChild ? Slot : View;
+
   return (
     <TextClassContext.Provider value={badgeTextVariants({ variant })}>
       <Component className={cn(badgeVariants({ variant }), className)} {...props} />
