@@ -20,7 +20,7 @@ function ToggleGroup({
   return (
     <ToggleGroupPrimitive.Root
       className={cn(
-        'flex flex-row items-center rounded-md shadow-none',
+        'flex flex-row items-center rounded-4xl shadow-none',
         Platform.select({ web: 'w-fit' }),
         variant === 'outline' && 'shadow-sm shadow-black/5',
         className
@@ -76,8 +76,8 @@ function ToggleGroupItem({
           props.disabled && 'opacity-50',
           ToggleGroupPrimitive.utils.getIsSelected(value, props.value) && 'bg-accent',
           'min-w-0 shrink-0 rounded-none shadow-none',
-          isFirst && 'rounded-l-md',
-          isLast && 'rounded-r-md',
+          isFirst && 'rounded-l-3xl',
+          isLast && 'rounded-r-3xl',
           (context.variant === 'outline' || variant === 'outline') && 'border-l-0',
           (context.variant === 'outline' || variant === 'outline') && isFirst && 'border-l',
           Platform.select({

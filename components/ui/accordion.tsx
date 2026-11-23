@@ -16,12 +16,13 @@ import Animated, {
 
 function Accordion({
   children,
-  ref,
+  className,
   ...props
 }: Omit<React.ComponentProps<typeof AccordionPrimitive.Root>, 'asChild'>) {
   return (
     <LayoutAnimationConfig skipEntering>
       <AccordionPrimitive.Root
+        className={cn('flex w-full flex-col overflow-hidden rounded-2xl border border-border', className)}
         {...(props as AccordionPrimitive.RootProps)}
         asChild={Platform.OS !== 'web'}>
         <Animated.View layout={LinearTransition.duration(200)}>{children}</Animated.View>
@@ -39,7 +40,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       className={cn(
-        'border-border border-b',
+        'border-border not-last:border-b data-[state=open]:bg-muted/50',
         Platform.select({ web: 'last:border-b-0' }),
         className
       )}
@@ -87,7 +88,7 @@ function AccordionTrigger({
         <AccordionPrimitive.Trigger {...props} asChild={Platform.OS !== 'web'}>
           <Trigger
             className={cn(
-              'flex-row items-start justify-between gap-4 rounded-md py-4 disabled:opacity-50',
+              'flex-row items-start justify-between gap-6 rounded-xl border border-transparent p-4 text-left text-sm font-medium disabled:opacity-50',
               Platform.select({
                 web: 'focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 outline-none transition-all hover:underline focus-visible:ring-[3px] disabled:pointer-events-none [&[data-state=open]>svg]:rotate-180',
               }),
@@ -133,7 +134,7 @@ function AccordionContent({
           exiting={Platform.select({
             native: FadeOutUp.duration(200).reduceMotion(ReduceMotion.System),
           })}
-          className={cn('pb-4', className)}>
+          className={cn('px-4 pb-4', className)}>
           {children}
         </Animated.View>
       </AccordionPrimitive.Content>

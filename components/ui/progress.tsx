@@ -15,11 +15,11 @@ function Progress({
   indicatorClassName,
   ...props
 }: React.ComponentProps<typeof ProgressPrimitive.Root> & {
-    indicatorClassName?: string;
-  }) {
+  indicatorClassName?: string;
+}) {
   return (
     <ProgressPrimitive.Root
-      className={cn('bg-primary/20 relative h-2 w-full overflow-hidden rounded-full', className)}
+      className={cn('bg-muted relative h-3 w-full overflow-hidden rounded-4xl', className)}
       {...props}>
       <Indicator value={value} className={indicatorClassName} />
     </ProgressPrimitive.Root>
@@ -48,7 +48,7 @@ function WebIndicator({ value, className }: IndicatorProps) {
     <View
       className={cn('bg-primary h-full w-full flex-1 transition-all', className)}
       style={{ transform: `translateX(-${100 - (value ?? 0)}%)` }}>
-      <ProgressPrimitive.Indicator className={cn('h-full w-full', className)} />
+      <ProgressPrimitive.Indicator className="h-full w-full" />
     </View>
   );
 }
@@ -56,14 +56,12 @@ function WebIndicator({ value, className }: IndicatorProps) {
 function NativeIndicator({ value, className }: IndicatorProps) {
   const progress = useDerivedValue(() => value ?? 0);
 
-  const indicator = useAnimatedStyle(() => {
-    return {
-      width: withSpring(
-        `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
-        { overshootClamping: true }
-      ),
-    };
-  }, [value]);
+  const indicator = useAnimatedStyle(() => ({
+    width: withSpring(
+      `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
+      { overshootClamping: true }
+    ),
+  }), [value]);
 
   if (Platform.OS === 'web') {
     return null;
@@ -71,7 +69,7 @@ function NativeIndicator({ value, className }: IndicatorProps) {
 
   return (
     <ProgressPrimitive.Indicator asChild>
-      <Animated.View style={indicator} className={cn('bg-foreground h-full', className)} />
+      <Animated.View style={indicator} className={cn('bg-primary h-full', className)} />
     </ProgressPrimitive.Indicator>
   );
 }

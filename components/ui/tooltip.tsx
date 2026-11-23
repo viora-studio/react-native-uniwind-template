@@ -7,8 +7,8 @@ import { Platform, StyleSheet } from 'react-native';
 import { FadeInDown, FadeInUp, FadeOut, ReduceMotion } from 'react-native-reanimated';
 import { FullWindowOverlay as RNFullWindowOverlay } from 'react-native-screens';
 
+const TooltipProvider = TooltipPrimitive.Provider;
 const Tooltip = TooltipPrimitive.Root;
-
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
 const FullWindowOverlay = Platform.OS === 'ios' ? RNFullWindowOverlay : React.Fragment;
@@ -20,8 +20,8 @@ function TooltipContent({
   side = 'top',
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content> & {
-    portalHost?: string;
-  }) {
+  portalHost?: string;
+}) {
   return (
     <TooltipPrimitive.Portal hostName={portalHost}>
       <FullWindowOverlay>
@@ -40,14 +40,14 @@ function TooltipContent({
             }
             exiting={FadeOut.reduceMotion(ReduceMotion.System)}
             as="Pressable">
-            <TextClassContext.Provider value="text-xs text-primary-foreground">
+            <TextClassContext.Provider value="text-xs text-background">
               <TooltipPrimitive.Content
                 sideOffset={sideOffset}
                 className={cn(
-                  'bg-primary z-50 rounded-md px-3 py-2 sm:py-1.5',
+                  'bg-foreground z-50 w-fit max-w-xs rounded-2xl px-3 py-1.5',
                   Platform.select({
                     web: cn(
-                      'animate-in fade-in-0 zoom-in-95 origin-(--radix-tooltip-content-transform-origin) w-fit text-balance',
+                      'animate-in fade-in-0 zoom-in-95 origin-(--radix-tooltip-content-transform-origin)',
                       side === 'bottom' && 'slide-in-from-top-2',
                       side === 'left' && 'slide-in-from-right-2',
                       side === 'right' && 'slide-in-from-left-2',
@@ -67,4 +67,4 @@ function TooltipContent({
   );
 }
 
-export { Tooltip, TooltipContent, TooltipTrigger };
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
