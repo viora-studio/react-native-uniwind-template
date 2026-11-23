@@ -1,0 +1,72 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - "feat/**"
+      - "fix/**"
+  pull_request:
+    branches:
+      - master
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    name: Android Production Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check Expo configuration
+        run: pnpm exec expo config --type public
+
+      - name: Run Expo Doctor
+        run: pnpm dlx expo-doctor
+
+      - name: Export Android production bundle
+        run: pnpm exec expo export --platform android
+
+      - name: Upload Android bundle
+        if: always() && hashFiles('dist/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-production-bundle
+          path: dist/
+          if-no-files-found: ignore
+          retention-days: 7
