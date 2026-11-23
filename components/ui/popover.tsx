@@ -8,9 +8,7 @@ import { FadeIn, FadeOut, ReduceMotion } from 'react-native-reanimated';
 import { FullWindowOverlay as RNFullWindowOverlay } from 'react-native-screens';
 
 const Popover = PopoverPrimitive.Root;
-
 const PopoverTrigger = PopoverPrimitive.Trigger;
-
 const FullWindowOverlay = Platform.OS === 'ios' ? RNFullWindowOverlay : React.Fragment;
 
 function PopoverContent({
@@ -20,8 +18,8 @@ function PopoverContent({
   portalHost,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content> & {
-    portalHost?: string;
-  }) {
+  portalHost?: string;
+}) {
   return (
     <PopoverPrimitive.Portal hostName={portalHost}>
       <FullWindowOverlay>
@@ -37,10 +35,10 @@ function PopoverContent({
                 align={align}
                 sideOffset={sideOffset}
                 className={cn(
-                  'bg-popover border-border outline-hidden z-50 w-72 rounded-md border p-4 shadow-md shadow-black/5',
+                  'bg-popover border border-foreground/10 z-50 w-72 rounded-2xl p-4 shadow-2xl shadow-black/5',
                   Platform.select({
                     web: cn(
-                      'animate-in fade-in-0 zoom-in-95 origin-(--radix-popover-content-transform-origin) cursor-auto',
+                      'bg-popover/90 backdrop-blur-2xl animate-in fade-in-0 zoom-in-95 origin-(--radix-popover-content-transform-origin) cursor-auto',
                       props.side === 'bottom' && 'slide-in-from-top-2',
                       props.side === 'top' && 'slide-in-from-bottom-2'
                     ),
