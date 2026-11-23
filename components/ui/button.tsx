@@ -88,10 +88,10 @@ const buttonTextVariants = cva('text-sm font-medium', {
 });
 
 const emphasisGradients = {
-  default: { start: '#3C86FF', end: '#056DFF', ring: '#045EDE' },
-  brand: { start: '#DADD6C', end: '#D5D647', ring: '#B9BA3D' },
-  destructive: { start: '#FF5B57', end: '#FB2C36', ring: '#DA252E' },
-  destructiveDark: { start: '#F0463E', end: '#E7000B', ring: '#C90008' },
+  default: { start: '#3C86FF', end: '#056DFF' },
+  brand: { start: '#DADD6C', end: '#D5D647' },
+  destructive: { start: '#FF5B57', end: '#FB2C36' },
+  destructiveDark: { start: '#F0463E', end: '#E7000B' },
 } as const;
 
 type ButtonProps = React.ComponentProps<typeof Pressable> &
@@ -134,16 +134,14 @@ function Button({
                 </LinearGradient>
               </Defs>
               <Rect
-                x="0.5"
-                y="0.5"
-                width="99"
-                height="39"
-                rx="18"
+                x="0"
+                y="0"
+                width="100"
+                height="40"
+                rx="5"
+                ry="20"
                 fill={`url(#${gradientId})`}
-                stroke={gradient.ring}
-                strokeWidth="1"
               />
-              <Rect x="1" y="1" width="98" height="1.5" rx="1" fill="#FFFFFF" opacity="0.18" />
             </Svg>
           </View>
         )}
